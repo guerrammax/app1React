@@ -1,30 +1,44 @@
 import React, { useState } from "react";
+import Tarea from "./Tarea";
 
 const ListaApp = () => {
   const [title, setTitle] = useState("Hola");
   const [tareas, setTareas] = useState([]);
 
-  function handleClick(e) {
-    e.preventDefault();
-    setTitle("MAx");
-  }
+  // function handleClick(e) {
+  //   e.preventDefault();
+  //   setTitle("MAx");
+  // }
 
-  const handleSubmit = (e)=>{
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    const newTarea ={
+    const newTarea = {
       id: crypto.randomUUID(),
       title: title,
-      completed: false
-    }
+      completed: false,
+    };
 
     //fomra legible
-    const temp = [...tareas];// una copia
-    temp.unshift(newTarea);//agrega al inicio
+    const temp = [...tareas]; // una copia
+    temp.unshift(newTarea); //agrega al inicio
     setTareas(temp);
+    setTitle("");
     //Forma simplificada
     //setTareas([...tareas, newTarea])
-  }
+  };
+
+  const handleUpdate = (id, value) => {
+    const temp = [...tareas];
+    const item = temp.find((item) => (item.id === id));
+    item.title = value;
+    setTareas(temp);
+  };
+
+  const handleDelete = (id) => {
+    const temp = tareas.filter(item => item.id !== id)
+    setTareas(temp);
+  };
 
   return (
     <>
@@ -46,11 +60,9 @@ const ListaApp = () => {
         </form>
 
         <div className="tareasContainer">
-          {
-            tareas.map(item => (
-              <div key={item.id}>{item.title}</div>             
-            ))
-          }
+          {tareas.map((item) => (
+            <Tarea key={item.id} item={item} onUpdate={handleUpdate} onDelete={handleDelete}></Tarea>
+          ))}
         </div>
       </div>
     </>
